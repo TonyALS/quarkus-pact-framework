@@ -14,7 +14,8 @@
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
     <quarkus.platform.version>2.13.3.Final</quarkus.platform.version>
     <pact.version>4.3.16</pact.version>
-    <lombok.version>1.18.22</lombok.version>
+    <assertj.version>3.23.1</assertj.version>
+    <lombok.version>1.18.24</lombok.version>
     <skipITs>true</skipITs>
     <surefire-plugin.version>3.0.0-M7</surefire-plugin.version>
   </properties>
@@ -68,6 +69,12 @@
       <groupId>au.com.dius.pact.consumer</groupId>
       <artifactId>junit5</artifactId>
       <version>${pact.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>${assertj.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -135,6 +142,16 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>au.com.dius.pact.provider</groupId>
+        <artifactId>maven</artifactId>
+        <version>4.3.16</version>
+        <configuration>
+          <pactBrokerUrl>http://localhost:9292</pactBrokerUrl>
+          <pactDirectory>target/pacts</pactDirectory>
+          <trimSnapshot>true</trimSnapshot>
+        </configuration>
       </plugin>
     </plugins>
   </build>

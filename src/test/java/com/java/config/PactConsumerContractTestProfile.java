@@ -20,7 +20,7 @@ import java.util.Map;
 public class PactConsumerContractTestProfile implements QuarkusTestProfile {
     // Make an assumption and hard-code the Pact MockServer to be running on port 8081
     // I don't like it but couldn't figure out any other way
-    private static final String URL = "localhost:8081";
+    private static final String URL = "http://localhost:8081";
 
     @Override
     public Map<String, String> getConfigOverrides() {
