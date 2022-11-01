@@ -36,7 +36,7 @@ class PeopleResourceContractTest {
 
     private static final String ADDRESS = "/address";
 
-    @Pact(provider = "AddressProvider", consumer = "PersonConsumer")
+    @Pact(provider = "AddressSuccessProvider", consumer = "PersonConsumer")
     public V4Pact getAddressTest(PactDslWithProvider builder) {
         return builder
                 .given("A request for a get address from People")
@@ -57,7 +57,7 @@ class PeopleResourceContractTest {
                 .toPact(V4Pact.class);
     }
 
-    @Pact(provider = "AddressProvider", consumer = "PersonConsumer")
+    @Pact(provider = "AddressFailProvider", consumer = "PersonConsumer")
     public V4Pact getAddressWithWrongContractTest(PactDslWithProvider builder) {
         return builder
                 .given("A request for a get address from People answering a wrong contract")
@@ -69,17 +69,17 @@ class PeopleResourceContractTest {
                 .status(HttpStatus.SC_OK)
                 .headers(Map.of(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .body(PactDslJsonArray.arrayEachLike(3)
-                        .stringType("id")
-                        .stringType("personId")
+                        .integerType("id")
+                        .integerType("personId")
                         .stringType("streetName")
                         .stringType("number")
-                        .integerType("additions")
+                        .stringType("additions")
                         .closeObject())
                 .toPact(V4Pact.class);
     }
 
     @Test
-    @PactTestFor(pactMethod = "getAddressTest", providerName = "AddressProvider")
+    @PactTestFor(pactMethod = "getAddressTest", providerName = "AddressSuccessProvider")
     void testGetAddress(MockServer mockServer) {
         //Given
         Response addresses = ClientBuilder.newClient()
@@ -101,14 +101,14 @@ class PeopleResourceContractTest {
     }
 
     @Test
-    @PactTestFor(pactMethod = "getAddressWithWrongContractTest", providerName = "AddressProvider")
+    @PactTestFor(pactMethod = "getAddressWithWrongContractTest", providerName = "AddressFailProvider")
     void testGetAddressWrongContract(MockServer mockServer) {
         //Given
         Response addresses = ClientBuilder.newClient()
                 .target(mockServer.getUrl() + ADDRESS)
                 .request(MediaType.APPLICATION_JSON)
                 .get();
-/*        List<Address> addressList = addresses.readEntity(new GenericType<List<Address>>(){});
+        List<Address> addressList = addresses.readEntity(new GenericType<List<Address>>(){});
         //Then
         assertThat(addresses.getStatus()).isEqualTo(HttpStatus.SC_OK);
         assertThat(addressList)
@@ -119,7 +119,7 @@ class PeopleResourceContractTest {
                         Address::getAdditions,
                         Address::getNumber,
                         Address::getStreetName
-                );*/
+                );
     }
 
 }
